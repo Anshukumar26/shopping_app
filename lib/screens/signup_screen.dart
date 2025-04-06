@@ -1,117 +1,149 @@
 import 'package:flutter/material.dart';
-
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'home_screen.dart';
 import 'login_screen.dart';
 
-class SignupScreen extends StatelessWidget {
+class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
+
+  @override
+  State<SignupScreen> createState() => _SignupScreenState();
+}
+
+class _SignupScreenState extends State<SignupScreen> {
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _numberController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmController = TextEditingController();
+
+  final _auth = FirebaseAuth.instance;
+  bool _isLoading = false;
+
+  void _signUp() async {
+    if (_passwordController.text != _confirmController.text) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Passwords do not match")),
+      );
+      return;
+    }
+
+    try {
+      setState(() => _isLoading = true);
+      await _auth.createUserWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomeScreen()),
+      );
+    } on FirebaseAuthException catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.message ?? "Signup failed")),
+      );
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Material(
       child: SafeArea(
-          child: Center(
+        child: Center(
+          child: SingleChildScrollView(
             child: Column(
               children: [
-                //SizedBox(height: 110),
                 Image.asset("images/freed.jpg"),
-                SizedBox(height: 50),
+                const SizedBox(height: 30),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25),
                   child: Column(
                     children: [
                       TextFormField(
-                        decoration: InputDecoration(
+                        controller: _nameController,
+                        decoration: const InputDecoration(
                           labelText: "Enter Name",
                           border: OutlineInputBorder(),
                           prefixIcon: Icon(Icons.person),
                         ),
                       ),
-                      SizedBox(height: 15),
-
+                      const SizedBox(height: 15),
                       TextFormField(
-                        decoration: InputDecoration(
+                        controller: _emailController,
+                        decoration: const InputDecoration(
                           labelText: "Enter Email",
                           border: OutlineInputBorder(),
                           prefixIcon: Icon(Icons.email),
                         ),
                       ),
-                      SizedBox(height: 15),
-
+                      const SizedBox(height: 15),
                       TextFormField(
-                        decoration: InputDecoration(
+                        controller: _numberController,
+                        decoration: const InputDecoration(
                           labelText: "Enter Number",
                           border: OutlineInputBorder(),
-                          prefixIcon: Icon(Icons.numbers),
+                          prefixIcon: Icon(Icons.phone),
                         ),
                       ),
-                      SizedBox(height: 15),
+                      const SizedBox(height: 15),
                       TextFormField(
+                        controller: _passwordController,
                         obscureText: true,
-                        decoration: InputDecoration(
-                            labelText: "Enter Password",
-                            border: OutlineInputBorder(),
-                            prefixIcon: Icon(Icons.lock),
-                            suffixIcon: Icon(Icons.remove_red_eye)
+                        decoration: const InputDecoration(
+                          labelText: "Enter Password",
+                          border: OutlineInputBorder(),
+                          prefixIcon: Icon(Icons.lock),
+                          suffixIcon: Icon(Icons.remove_red_eye),
                         ),
                       ),
-                      SizedBox(height: 15),
+                      const SizedBox(height: 15),
                       TextFormField(
-                        decoration: InputDecoration(
+                        controller: _confirmController,
+                        obscureText: true,
+                        decoration: const InputDecoration(
                           labelText: "Confirm Password",
                           border: OutlineInputBorder(),
-                            prefixIcon: Icon(Icons.lock),
-                            suffixIcon: Icon(Icons.remove_red_eye)
+                          prefixIcon: Icon(Icons.lock),
+                          suffixIcon: Icon(Icons.remove_red_eye),
                         ),
                       ),
-                      SizedBox(height: 15),
-                      Align(
-                        alignment: Alignment.bottomRight,
-                        child: TextButton(onPressed: () {}, child: Text("Forgot Password",
-                          style: TextStyle(
-                              color: Colors.pink,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600
-                          ),
-                        ),),),
-                      SizedBox(height: 40),
+                      const SizedBox(height: 40),
                       ElevatedButton(
-                        onPressed: (){
-                          Navigator.push(context,
-                              MaterialPageRoute(
-                                builder: (context) => HomeScreen(),));
-                        },
-                        child: Text("Create Account",
+                        onPressed: _isLoading ? null : _signUp,
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: const Size.fromHeight(55),
+                          backgroundColor: Colors.pink,
+                        ),
+                        child: _isLoading
+                            ? const CircularProgressIndicator(color: Colors.white)
+                            : const Text("Create Account",
                             style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w600,
                                 color: Colors.white)),
-                        style: ElevatedButton.styleFrom(
-                            minimumSize: Size.fromHeight(55),
-                            backgroundColor: Colors.pink
-                        ),
                       ),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text("Already Have an Account?",
-                            style: TextStyle(
-                                color: Colors.black54,
-                                fontSize: 15),
+                          const Text("Already Have an Account?",
+                              style: TextStyle(color: Colors.black54, fontSize: 15)),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(builder: (context) => const LoginScreen()),
+                              );
+                            },
+                            child: const Text("Log In",
+                                style: TextStyle(
+                                    color: Colors.pink,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600)),
                           ),
-                          TextButton(onPressed: () {
-                            Navigator.push(context,
-                                MaterialPageRoute(
-                                  builder: (context) => LoginScreen(),));
-                          }, child: Text("Log In",
-                            style: TextStyle(
-                                color: Colors.pink,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600
-                            ),
-                          ),),
                         ],
                       )
                     ],
@@ -119,9 +151,9 @@ class SignupScreen extends StatelessWidget {
                 )
               ],
             ),
-          )),
-    );();
+          ),
+        ),
+      ),
+    );
   }
 }
-
-

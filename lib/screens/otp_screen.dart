@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shopping_app/screens/login_screen.dart';
 import 'package:shopping_app/screens/otp_verify_screen.dart';
 
 class OTPScreen extends StatelessWidget {
@@ -48,7 +49,7 @@ class OTPScreen extends StatelessWidget {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => OtpVerifyScreen(),));
+                        builder: (context) => LoginScreen(),));
                 },
                 child: Text("Send Code",
                     style: TextStyle(

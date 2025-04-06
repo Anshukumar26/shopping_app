@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shopping_app/screens/home_screen.dart';
 import 'package:shopping_app/screens/profile_screen.dart';
+import 'package:shopping_app/screens/search_screen.dart';
 
 import 'cart_screen.dart';
 import 'favorites_screen.dart';
@@ -32,8 +33,13 @@ class _NavigationScreenState extends State<NavigationScreen> {
       ),
       floatingActionButton: SafeArea(
           child: FloatingActionButton(
-              onPressed: (){},
-            child: Icon(Icons.qr_code,size: 20,),
+              onPressed: (){
+                Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SearchScreen()),
+              );
+              },
+            child: Icon(Icons.search,size: 25,),
             backgroundColor: Colors.pinkAccent,
           ),
       ),
@@ -41,8 +47,8 @@ class _NavigationScreenState extends State<NavigationScreen> {
       bottomNavigationBar: AnimatedBottomNavigationBar(
         icons: [
           CupertinoIcons.home,
-          CupertinoIcons.cart,
-          CupertinoIcons.heart,
+          CupertinoIcons.cart_fill,
+          CupertinoIcons.heart_fill,
           CupertinoIcons.profile_circled,
         ],
         //splashColor: ,
@@ -52,9 +58,10 @@ class _NavigationScreenState extends State<NavigationScreen> {
         activeIndex: pageIndex,
         notchSmoothness: NotchSmoothness.softEdge,
         leftCornerRadius: 10,
-        iconSize: 35,
+        iconSize: 25,
         rightCornerRadius: 10,
         elevation: 0,
+        height: 45,
         onTap: (index){
           setState(() {
             pageIndex = index;

@@ -1,0 +1,2 @@
+C:/shopping_app/android/app/.cxx/Debug/1j3bt85i/x86_64/CMakeFiles/edit_cache.dir
+C:/shopping_app/android/app/.cxx/Debug/1j3bt85i/x86_64/CMakeFiles/rebuild_cache.dir
