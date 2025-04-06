@@ -77,7 +77,7 @@ class OnboardingScreen extends StatelessWidget {
           fontWeight: FontWeight.w600,
           color: Colors.pink
       ),),
-      done: Text("done", style: TextStyle(
+      done: Text("", style: TextStyle(
           fontWeight: FontWeight.w600,
           color: Colors.pink
       ),),

@@ -7,37 +7,31 @@ import 'package:shopping_app/payment_screen.dart';
 import 'package:shopping_app/screens/cart_provider.dart';
 import 'package:shopping_app/screens/colour.dart';
 import 'package:shopping_app/screens/login_screen.dart';
+import 'package:shopping_app/screens/navigation_screen.dart';
+import 'package:shopping_app/screens/splash_screen.dart'; // if you use it
 
-import 'favorites_provider.dart';
 import 'firebase_options.dart';
-import 'screens/navigation_screen.dart';
-import 'screens/splash_screen.dart'; // if you use it
-// import 'providers/cart_provider.dart'; // your cart provider
+import 'favorites_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => CartProvider()),
-  MultiProvider(
-  providers: [
-  ChangeNotifierProvider(create: (_) => FavoritesProvider()),
+        ChangeNotifierProvider(create: (_) => FavoritesProvider()),
       ],
       child: const MyApp(),
-    ),
-  ],
     ),
   );
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
-  get orderId => null;
 
   @override
   Widget build(BuildContext context) {
@@ -47,14 +41,29 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: Colors.yellow,
       ),
-      home: NavigationScreen(),
+      home: const SplashScreen(), // Or SplashScreen() if that comes first
+      // home: const NavigationScreen(),
 
-      initialRoute: '/address',
+      // Define named routes
       routes: {
         '/address': (context) => const AddressScreen(),
         '/payment': (context) => const PaymentScreen(),
-        '/confirmation': (context) => ConfirmationScreen(orderId: orderId),
-      },// or SplashScreen() if that’s first
+
+        // We must pass `orderId` when navigating to this route
+        // So you shouldn't use `/confirmation` directly unless passing arguments
+        // If needed, use onGenerateRoute for dynamic parameters
+      },
+      onGenerateRoute: (settings) {
+        if (settings.name == '/confirmation') {
+          final args = settings.arguments as Map<String, dynamic>;
+          final orderId = args['orderId'] as String;
+
+          return MaterialPageRoute(
+            builder: (context) => ConfirmationScreen(orderId: orderId),
+          );
+        }
+        return null;
+      },
     );
   }
 }
