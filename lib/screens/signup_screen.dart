@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shopping_app/screens/navigation_screen.dart';
 import 'home_screen.dart';
 import 'login_screen.dart';
 
@@ -37,7 +38,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => HomeScreen()),
+        MaterialPageRoute(builder: (context) => NavigationScreen()),
       );
     } on FirebaseAuthException catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(

@@ -1,16 +1,20 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shopping_app/address_screen.dart';
 import '../../favorites_provider.dart';
 import '../cart_provider.dart';
+import '../colour.dart';
 
 class VeroModaScreen extends StatefulWidget {
   final String name = 'VERO MODA';
   final String imageUrl = 'images/b1.jpg';
   final double price = 499.0;
   final String brand = 'VEDO MODA';
+  final Gradient? selectedGradient; // To receive gradient from GradientGenerator
+  final String? uploadedImagePath; // To receive uploaded image path
 
-  const VeroModaScreen({super.key});
+  const VeroModaScreen({super.key, this.selectedGradient, this.uploadedImagePath});
 
   @override
   State<VeroModaScreen> createState() => _VeroModaScreenState();
@@ -52,7 +56,6 @@ class _VeroModaScreenState extends State<VeroModaScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Product Image
             SizedBox(
               height: 500,
               child: PageView(
@@ -62,7 +65,6 @@ class _VeroModaScreenState extends State<VeroModaScreen> {
                 ],
               ),
             ),
-
             Padding(
               padding: const EdgeInsets.all(12),
               child: Column(
@@ -71,8 +73,6 @@ class _VeroModaScreenState extends State<VeroModaScreen> {
                   Text(widget.name, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                   const Text("Scott International Men's Cotton Regular Fit Polo T-Shirt", style: TextStyle(fontSize: 14)),
                   const SizedBox(height: 8),
-
-                  // Rating + Favorite
                   Row(
                     children: [
                       ...List.generate(3, (index) => const Icon(Icons.star, color: Colors.orange, size: 16)),
@@ -103,27 +103,59 @@ class _VeroModaScreenState extends State<VeroModaScreen> {
                       ),
                     ],
                   ),
-
                   const SizedBox(height: 12),
-
-                  // Color
-                  const Text("Colour: Red - White", style: TextStyle(fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 8),
+                  // Replaced Row with two containers
                   Row(
                     children: [
-                      _colorOption(""),
-                      _colorOption("https://example.com/color2.jpg"),
-                      _colorOption("https://example.com/color3.jpg"),
+                      // Container for selected gradient
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => GradientGenerator()),
+                          );
+                        },
+                        child: Container(
+                          width: 50,
+                          height: 50,
+                          decoration: BoxDecoration(
+                            gradient: widget.selectedGradient ?? const LinearGradient(colors: [Colors.grey, Colors.grey]),
+                            border: Border.all(color: Colors.grey),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      // Container for uploaded image
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => GradientGenerator()),
+                          );
+                        },
+                        child: Container(
+                          width: 50,
+                          height: 50,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey),
+                          ),
+                          child: widget.uploadedImagePath != null
+                              ? Image.file(
+                            File(widget.uploadedImagePath!),
+                            fit: BoxFit.cover,
+                          )
+                              : const Center(child: Icon(Icons.image, color: Colors.grey)),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      const Text("Customise", style: TextStyle(fontWeight: FontWeight.bold)),
                     ],
                   ),
-
                   const SizedBox(height: 12),
-
-                  // Size
                   const Text("Size:", style: TextStyle(fontWeight: FontWeight.bold)),
                   const SizedBox(height: 8),
                   Row(
-                    children: ["S","M", "L", "XL", "2XL"]
+                    children: ["S", "M", "L", "XL", "2XL"]
                         .map((sz) => Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 4),
                       child: ElevatedButton(
@@ -141,10 +173,7 @@ class _VeroModaScreenState extends State<VeroModaScreen> {
                     ))
                         .toList(),
                   ),
-
                   const SizedBox(height: 12),
-
-                  // Price
                   Row(
                     children: [
                       Text("₹${widget.price}", style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.green)),
@@ -154,15 +183,10 @@ class _VeroModaScreenState extends State<VeroModaScreen> {
                       const Text("-73%", style: TextStyle(fontSize: 16, color: Colors.red)),
                     ],
                   ),
-
                   const SizedBox(height: 12),
-
                   const Text("FREE delivery Wednesday, 9 April"),
                   const Text("Fastest delivery Tuesday, 8 April"),
-
                   const SizedBox(height: 12),
-
-                  // Action Buttons
                   Row(
                     children: [
                       Expanded(
@@ -210,21 +234,6 @@ class _VeroModaScreenState extends State<VeroModaScreen> {
               ),
             ),
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget _colorOption(String imageUrl) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 4),
-      child: Container(
-        width: 50,
-        height: 50,
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey),
-          shape: BoxShape.circle,
-          image: DecorationImage(image: NetworkImage(imageUrl), fit: BoxFit.cover),
         ),
       ),
     );
