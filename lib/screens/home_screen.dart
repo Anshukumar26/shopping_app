@@ -22,23 +22,23 @@ class HomeScreen extends StatelessWidget {
     // 🆕 Each item includes image and screen to navigate to
     final List<Map<String, dynamic>> newArrivals = [
       {'image': 'images/product0.jpg', 'screen': ProductScreen1()},
-      {'image': 'images/product1.jpg', 'screen': ProductScreen2()},
-      {'image': 'images/product2.jpg', 'screen': ProductScreen3()},
-      {'image': 'images/product3.jpg', 'screen': ProductScreen4()},
+      {'image': 'images/men1.jpg', 'screen': ProductScreen2()},
+      {'image': 'images/kids1.jpg', 'screen': ProductScreen3()},
+      {'image': 'images/beauty1.jpg', 'screen': ProductScreen4()},
     ];
 
     final List<Map<String, dynamic>> bestSellers = [
       {'image': 'images/product2.jpg', 'screen': Best1()},
-      {'image': 'images/product0.jpg', 'screen': Best2()},
-      {'image': 'images/product3.jpg', 'screen': Best3()},
-      {'image': 'images/product1.jpg', 'screen': Best4()},
+      {'image': 'images/men2.jpg', 'screen': Best2()},
+      {'image': 'images/kids2.jpg', 'screen': Best3()},
+      {'image': 'images/beauty2.jpg', 'screen': Best4()},
     ];
 
     final List<Map<String, dynamic>> featuredDesigners = [
       {'image': 'images/product3.jpg', 'screen': Featured1()},
-      {'image': 'images/product1.jpg', 'screen': Featured2()},
-      {'image': 'images/product0.jpg', 'screen': Feactured3()},
-      {'image': 'images/product2.jpg', 'screen': Featured4()},
+      {'image': 'images/men3.jpg', 'screen': Featured2()},
+      {'image': 'images/kids3.jpg', 'screen': Feactured3()},
+      {'image': 'images/beauty3.jpg', 'screen': Featured4()},
     ];
 
     return Scaffold(

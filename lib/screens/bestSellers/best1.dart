@@ -13,12 +13,12 @@ import '../women_best1/vero_moda_screen.dart';
 
 class Best1 extends StatelessWidget {
   final List<Map<String, dynamic>> newArrivals = [
-    {'name': 'VERO MODA', 'price': 399, 'imageUrl': 'images/b1.jpg', 'screen': VeroModaScreen()},
-    {'name': 'Janasya', 'price': 599, 'imageUrl': 'images/placeholder.jpg', 'screen': Janasya()},
-    {'name': 'Van Heusen', 'price': 299, 'imageUrl': 'images/placeholder.jpg', 'screen': VanHeusenScreen()},
-    {'name': 'Styli', 'price': 1299, 'imageUrl': 'images/placeholder.jpg', 'screen': Styli()},
-    {'name': 'FOREVER 21', 'price': 1499, 'imageUrl': 'images/placeholder.jpg', 'screen': Forever21()},
-    {'name': 'Janasya', 'price': 499, 'imageUrl': 'images/placeholder.jpg', 'screen': Janasya1()},
+    {'name': 'VERO MODA', 'price': 399, 'imageAsset': 'images/women1.jpg', 'screen': VeroModaScreen()},
+    {'name': 'Janasya', 'price': 599, 'imageAsset': 'images/women2.jpg', 'screen': Janasya()},
+    {'name': 'Van Heusen', 'price': 299, 'imageAsset': 'images/women3.jpg', 'screen': VanHeusenScreen()},
+    {'name': 'Styli', 'price': 1299, 'imageAsset': 'images/women4.jpg', 'screen': Styli()},
+    {'name': 'FOREVER 21', 'price': 1499, 'imageAsset': 'images/women5.jpg', 'screen': Forever21()},
+    {'name': 'Janasya', 'price': 499, 'imageAsset': 'images/women6.jpg', 'screen': Janasya1()},
   ];
 
   @override
@@ -54,19 +54,28 @@ class Best1 extends StatelessWidget {
       height: 105,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: 5,
+        itemCount: newArrivals.length,
         itemBuilder: (context, index) {
+          final item = newArrivals[index];
+          final String imageAsset = item['imageAsset'] ?? 'assets/images/placeholder.jpg'; // Fallback asset
+
           return Padding(
-            padding: EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8.0),
             child: Column(
               children: [
                 CircleAvatar(
                   radius: 30,
+                  backgroundImage: AssetImage(imageAsset),
                   backgroundColor: Colors.grey[300],
-                  child: Icon(Icons.image, size: 30, color: Colors.white),
+                  onBackgroundImageError: (exception, stackTrace) {
+                    // Handle image loading error if needed
+                  },
                 ),
-                SizedBox(height: 5),
-                Text('Viewed')
+                const SizedBox(height: 5),
+                Text(
+                  item['name'] ?? 'Unknown',
+                  style: const TextStyle(fontSize: 12),
+                ),
               ],
             ),
           );
@@ -88,11 +97,12 @@ class Best1 extends StatelessWidget {
   }
 
   Widget _buildProductGrid(BuildContext context) {
-    return Container(
-      height: 1200,
+    return Padding( // Replaced Container with Padding for flexibility
+      padding: const EdgeInsets.all(8.0),
       child: GridView.builder(
-        padding: EdgeInsets.all(8.0),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        shrinkWrap: true, // Allows GridView to take only the space it needs
+        physics: const NeverScrollableScrollPhysics(), // Disables GridView scrolling
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           childAspectRatio: 0.7,
         ),
@@ -103,7 +113,7 @@ class Best1 extends StatelessWidget {
           final int price = item['price'] ?? 0;
           final String brand = item['brand'] ?? 'Trendy Brand';
           final String size = item['size'] ?? 'M';
-          final String imageUrl = item['imageUrl'] ?? 'https://via.placeholder.com/150';
+          final String imageAsset = item['imageAsset'] ?? 'assets/images/placeholder.jpg';
 
           return GestureDetector(
             onTap: () {
@@ -122,8 +132,8 @@ class Best1 extends StatelessWidget {
                   Expanded(
                     child: ClipRRect(
                       borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
-                      child: Image.network(
-                        imageUrl,
+                      child: Image.asset(
+                        imageAsset,
                         width: double.infinity,
                         fit: BoxFit.cover,
                         errorBuilder: (context, error, stackTrace) {
@@ -142,12 +152,11 @@ class Best1 extends StatelessWidget {
                         SizedBox(height: 6),
                         ElevatedButton(
                           onPressed: () {
-                            // Add item to cart
                             final cartProvider = Provider.of<CartProvider>(context, listen: false);
                             cartProvider.addItem(
                               name: name,
                               brand: brand,
-                              imageUrl: imageUrl,
+                              imageUrl: imageAsset, // Using asset path
                               price: price,
                               size: size,
                             );

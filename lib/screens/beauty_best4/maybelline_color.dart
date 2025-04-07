@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import 'dart:math' as math;
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shopping_app/screens/Kids_best3/kids_best3/hopscotch.dart';
+import 'package:shopping_app/screens/beauty_best4/maybelline.dart';
+import 'package:shopping_app/screens/men_best2/louis_philippe.dart';
+import 'package:shopping_app/screens/women_best1/forever21.dart';
 import 'package:shopping_app/screens/women_best1/vero_moda_screen.dart';
 
 class GradientGenerator extends StatefulWidget {
@@ -14,7 +18,7 @@ class _GradientGeneratorState extends State<GradientGenerator> {
   final List<Map<String, dynamic>> gradientSamples = [
     {'name': 'Sublime Vivid', 'colors': [Colors.red, Colors.blue]},
     {'name': 'Sublime Light', 'colors': [Colors.pink, Colors.purple]},
-    {'name': 'Pun Yeta', 'colors': [Colors.orange, Colors.brown]},
+    {'name': 'Pun Y    Yeta', 'colors': [Colors.orange, Colors.brown]},
     {'name': 'Quepal', 'colors': [Colors.green, Colors.teal]},
     {'name': 'Sand to Blue', 'colors': [Colors.brown, Colors.blue]},
     {'name': 'Wedding Day Blues', 'colors': [Colors.cyan, Colors.blue]},
@@ -31,7 +35,7 @@ class _GradientGeneratorState extends State<GradientGenerator> {
   AlignmentGeometry begin = Alignment.centerLeft;
   AlignmentGeometry end = Alignment.centerRight;
   final ImagePicker _picker = ImagePicker();
-  String? _imagePath; // To store the picked image path
+  String? _imagePath;
 
   @override
   Widget build(BuildContext context) {
@@ -228,11 +232,10 @@ class _GradientGeneratorState extends State<GradientGenerator> {
                   const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
-                      // Pass the selected gradient and image back to VeroModaCustomised
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => VeroModaScreen(
+                          builder: (context) => Maybelline(
                             selectedGradient: _buildGradient(),
                             uploadedImagePath: _imagePath,
                           ),
@@ -319,6 +322,66 @@ class ColorPickerDialog extends StatelessWidget {
           onPressed: () => Navigator.of(context).pop(selectedColor),
         ),
       ],
+    );
+  }
+}
+
+class Forever21Screen extends StatelessWidget {
+  final Gradient selectedGradient;
+  final String? uploadedImagePath;
+
+  const Forever21Screen({
+    required this.selectedGradient,
+    this.uploadedImagePath,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Forever 21', style: TextStyle(color: Colors.white)),
+        backgroundColor: Colors.black,
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Container(
+              height: 200,
+              decoration: BoxDecoration(
+                gradient: selectedGradient,
+              ),
+            ),
+            const SizedBox(height: 20),
+            if (uploadedImagePath != null) ...[
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Image.file(
+                  File(uploadedImagePath!),
+                  height: 300,
+                  fit: BoxFit.contain,
+                ),
+              ),
+              const SizedBox(height: 20),
+            ],
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.black,
+                  foregroundColor: Colors.white,
+                  minimumSize: const Size(double.infinity, 50),
+                ),
+                child: const Text('Back to Gradient Generator'),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

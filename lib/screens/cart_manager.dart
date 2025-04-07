@@ -6,9 +6,9 @@ class CartItem {
   final String size;
   int qty;
   final double price;
-  final String imageUrl;
+  final String imageAsset;
 
-  CartItem(this.name, this.brand, this.size, this.qty, this.price, this.imageUrl);
+  CartItem(this.name, this.brand, this.size, this.qty, this.price, this.imageAsset);
 }
 
 class CartManager {

@@ -1,22 +1,27 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shopping_app/address_screen.dart';
 import '../../favorites_provider.dart';
 import '../cart_provider.dart';
+import 'vero_moda_colour.dart';
 
 class VanHeusenScreen extends StatefulWidget {
   final String name = 'Van Heusen';
-  final String imageUrl = 'https://example.com/product.jpg';
-  final double price = 599.0;
+  final String imageUrl = 'images/women3.jpg';
+  final double price = 499.0;
   final String brand = 'Van Heusen';
+  final Gradient? selectedGradient;
+  final String? uploadedImagePath;
 
-  const VanHeusenScreen({super.key});
+  const VanHeusenScreen({super.key, this.selectedGradient, this.uploadedImagePath});
 
   @override
-  State<VanHeusenScreen> createState() => _VanHeusenScreenState();
+  State<VanHeusenScreen> createState() => _VeroModaScreenState();
 }
 
-class _VanHeusenScreenState extends State<VanHeusenScreen> {
-  String? _selectedSize = 'M'; // Default size
+class _VeroModaScreenState extends State<VanHeusenScreen> {
+  String? _selectedSize = 'M';
 
   @override
   Widget build(BuildContext context) {
@@ -51,17 +56,14 @@ class _VanHeusenScreenState extends State<VanHeusenScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Product Image
             SizedBox(
-              height: 300,
+              height: 500,
               child: PageView(
                 children: [
-                  Image.network(widget.imageUrl, fit: BoxFit.cover),
-                  Image.network("https://example.com/product2.jpg", fit: BoxFit.cover),
+                  Image.asset(widget.imageUrl, fit: BoxFit.cover),
                 ],
               ),
             ),
-
             Padding(
               padding: const EdgeInsets.all(12),
               child: Column(
@@ -70,14 +72,12 @@ class _VanHeusenScreenState extends State<VanHeusenScreen> {
                   Text(widget.name, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                   const Text("Scott International Men's Cotton Regular Fit Polo T-Shirt", style: TextStyle(fontSize: 14)),
                   const SizedBox(height: 8),
-
-                  // Rating + Favorite
                   Row(
                     children: [
                       ...List.generate(3, (index) => const Icon(Icons.star, color: Colors.orange, size: 16)),
                       const Icon(Icons.star_half, color: Colors.orange, size: 16),
                       const Icon(Icons.star_border, color: Colors.orange, size: 16),
-                      const Text(" 287 Ratings"),
+                      const Text(" 367 Ratings"),
                       const Spacer(),
                       IconButton(
                         icon: Icon(
@@ -102,66 +102,90 @@ class _VanHeusenScreenState extends State<VanHeusenScreen> {
                       ),
                     ],
                   ),
-
                   const SizedBox(height: 12),
-
-                  // Color
-                  const Text("Colour: Red - White", style: TextStyle(fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 8),
                   Row(
                     children: [
-                      _colorOption("https://example.com/color1.jpg"),
-                      _colorOption("https://example.com/color2.jpg"),
-                      _colorOption("https://example.com/color3.jpg"),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => GradientGenerator()),
+                          );
+                        },
+                        child: Container(
+                          width: 50,
+                          height: 50,
+                          decoration: BoxDecoration(
+                            gradient: widget.selectedGradient ?? const LinearGradient(colors: [Colors.grey, Colors.grey]),
+                            border: Border.all(color: Colors.grey),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => GradientGenerator()),
+                          );
+                        },
+                        child: Container(
+                          width: 50,
+                          height: 50,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey),
+                          ),
+                          child: widget.uploadedImagePath != null
+                              ? Image.file(
+                            File(widget.uploadedImagePath!),
+                            fit: BoxFit.cover,
+                          )
+                              : const Center(child: Icon(Icons.image, color: Colors.grey)),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      const Text("Customise", style: TextStyle(fontWeight: FontWeight.bold)),
                     ],
                   ),
-
                   const SizedBox(height: 12),
-
-                  // Size
                   const Text("Size:", style: TextStyle(fontWeight: FontWeight.bold)),
                   const SizedBox(height: 8),
-                  Row(
-                    children: ["M", "L", "XL", "2XL"]
-                        .map((sz) => Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 4),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            _selectedSize = sz;
-                          });
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: _selectedSize == sz ? Colors.blue : null,
-                          foregroundColor: _selectedSize == sz ? Colors.white : null,
-                        ),
-                        child: Text(sz),
-                      ),
-                    ))
-                        .toList(),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: ["S", "M", "L", "XL", "2XL"].map((sz) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 4),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              setState(() {
+                                _selectedSize = sz;
+                              });
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: _selectedSize == sz ? Colors.blue : null,
+                              foregroundColor: _selectedSize == sz ? Colors.white : null,
+                            ),
+                            child: Text(sz),
+                          ),
+                        );
+                      }).toList(),
+                    ),
                   ),
-
                   const SizedBox(height: 12),
-
-                  // Price
                   Row(
                     children: [
                       Text("₹${widget.price}", style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.green)),
                       const SizedBox(width: 10),
-                      const Text("₹1,399", style: TextStyle(fontSize: 16, decoration: TextDecoration.lineThrough, color: Colors.grey)),
+                      const Text("₹999", style: TextStyle(fontSize: 16, decoration: TextDecoration.lineThrough, color: Colors.grey)),
                       const SizedBox(width: 10),
-                      const Text("-63%", style: TextStyle(fontSize: 16, color: Colors.red)),
+                      const Text("-73%", style: TextStyle(fontSize: 16, color: Colors.red)),
                     ],
                   ),
-
                   const SizedBox(height: 12),
-
                   const Text("FREE delivery Wednesday, 9 April"),
                   const Text("Fastest delivery Tuesday, 8 April"),
-
                   const SizedBox(height: 12),
-
-                  // Action Buttons
                   Row(
                     children: [
                       Expanded(
@@ -192,9 +216,11 @@ class _VanHeusenScreenState extends State<VanHeusenScreen> {
                       Expanded(
                         child: ElevatedButton(
                           onPressed: () {
-                            // Add your Buy Now navigation here if needed
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Buy Now pressed')),
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => AddressScreen(),
+                              ),
                             );
                           },
                           style: ElevatedButton.styleFrom(backgroundColor: Colors.orange),
@@ -207,21 +233,6 @@ class _VanHeusenScreenState extends State<VanHeusenScreen> {
               ),
             ),
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget _colorOption(String imageUrl) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 4),
-      child: Container(
-        width: 50,
-        height: 50,
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey),
-          shape: BoxShape.circle,
-          image: DecorationImage(image: NetworkImage(imageUrl), fit: BoxFit.cover),
         ),
       ),
     );

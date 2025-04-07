@@ -4,7 +4,6 @@ import 'package:glassmorphism/glassmorphism.dart';
 import 'package:provider/provider.dart';
 import 'package:shopping_app/address_screen.dart';
 import 'cart_provider.dart';
-// import 'cart_item.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
@@ -32,8 +31,7 @@ class _CartScreenState extends State<CartScreen> {
     final cart = Provider.of<CartProvider>(context);
     final cartItems = cart.items;
 
-    double totalPrice =
-    cartItems.fold(0, (sum, item) => sum + (item.price * item.qty));
+    double totalPrice = cartItems.fold(0, (sum, item) => sum + (item.price * item.qty));
 
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
@@ -80,10 +78,10 @@ class _CartScreenState extends State<CartScreen> {
                       ],
                     ),
                     child: ListTile(
-                      contentPadding: EdgeInsets.symmetric(horizontal: 12),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 12),
                       leading: ClipRRect(
                         borderRadius: BorderRadius.circular(12),
-                        child: Image.network(
+                        child: Image.asset(
                           item.imageUrl,
                           width: 60,
                           height: 60,
@@ -100,22 +98,22 @@ class _CartScreenState extends State<CartScreen> {
                         children: [
                           Text(
                             "\u{20B9}${(item.price * item.qty).toStringAsFixed(2)}",
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                            style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
-                          SizedBox(height: 6),
+                          const SizedBox(height: 6),
                           Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               GestureDetector(
                                 onTap: () => updateQuantity(context, index, -1),
-                                child: Icon(Icons.remove_circle_outline, size: 18),
+                                child: const Icon(Icons.remove_circle_outline, size: 18),
                               ),
-                              SizedBox(width: 6),
+                              const SizedBox(width: 6),
                               Text(item.qty.toString()),
-                              SizedBox(width: 6),
+                              const SizedBox(width: 6),
                               GestureDetector(
                                 onTap: () => updateQuantity(context, index, 1),
-                                child: Icon(Icons.add_circle_outline, size: 18),
+                                child: const Icon(Icons.add_circle_outline, size: 18),
                               ),
                             ],
                           ),
@@ -131,7 +129,7 @@ class _CartScreenState extends State<CartScreen> {
             alignment: Alignment.bottomCenter,
             child: Container(
               padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
                 boxShadow: [
@@ -145,7 +143,7 @@ class _CartScreenState extends State<CartScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Divider(thickness: 2, indent: 100, endIndent: 100),
+                  const Divider(thickness: 2, indent: 100, endIndent: 100),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -153,7 +151,7 @@ class _CartScreenState extends State<CartScreen> {
                       Text("\u{20B9}${totalPrice.toStringAsFixed(2)}", style: GoogleFonts.poppins(fontSize: 16)),
                     ],
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -161,8 +159,8 @@ class _CartScreenState extends State<CartScreen> {
                       Text("\u{20B9}15.00", style: GoogleFonts.poppins(fontSize: 16)),
                     ],
                   ),
-                  SizedBox(height: 10),
-                  Divider(),
+                  const SizedBox(height: 10),
+                  const Divider(),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -173,26 +171,24 @@ class _CartScreenState extends State<CartScreen> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   ElevatedButton.icon(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.black,
                       foregroundColor: Colors.white,
-                      padding: EdgeInsets.symmetric(horizontal: 30, vertical: 14),
+                      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 14),
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                     ),
                     onPressed: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(
-                            builder: (context) => AddressScreen(),));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const AddressScreen()));
                     },
-                    icon: Icon(Icons.lock),
-                    label: Text("Secure Checkout", style: GoogleFonts.poppins(fontSize: 16),),
+                    icon: const Icon(Icons.lock),
+                    label: Text("Secure Checkout", style: GoogleFonts.poppins(fontSize: 16)),
                   ),
                 ],
               ),
             ),
-          )
+          ),
         ],
       ),
     );

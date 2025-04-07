@@ -4,28 +4,18 @@ import 'package:shopping_app/screens/beauty_best4/facescanada.dart';
 import 'package:shopping_app/screens/beauty_best4/lakme.dart';
 import 'package:shopping_app/screens/beauty_best4/maybelline.dart';
 import 'package:shopping_app/screens/beauty_best4/ponds.dart';
+import 'package:shopping_app/screens/beauty_best4/sugar.dart';
 import 'package:shopping_app/screens/beauty_best4/swiss.dart';
-import 'package:shopping_app/screens/select_product/select_product.dart';
-
-import '../Kids_best3/kids_best3/babygo.dart';
-import '../Kids_best3/kids_best3/hopscotch.dart';
-import '../Kids_best3/kids_best3/kidsville.dart';
-import '../Kids_best3/kids_best3/max.dart';
-import '../Kids_best3/kids_best3/superminis.dart';
-import '../Kids_best3/kids_best3/toonyport.dart';
 import '../cart_provider.dart';
-import '../cart_screen.dart';
-
 
 class Best4 extends StatelessWidget {
-
   final List<Map<String, dynamic>> newArrivals = [
-    {'name': 'Swiss Beauty', 'price': 399, 'screen': Swiss()},
-    {'name': 'Faces Canada', 'price': 599, 'screen': Facescanada()},
-    {'name': 'Maybelline', 'price': 299, 'screen': Maybelline()},
-    {'name': 'Ponds', 'price': 1299, 'screen': Ponds()},
-    {'name': 'Superminis', 'price': 1499, 'screen': Superminis()},
-    {'name': 'Lakme', 'price': 499, 'screen': Lakme()},
+    {'name': 'Swiss Beauty', 'price': 399, 'imageAsset': 'images/b1.jpg', 'screen': Swiss()},
+    {'name': 'Faces Canada', 'price': 599, 'imageAsset': 'images/b2.jpg', 'screen': Facescanada()},
+    {'name': 'Maybelline', 'price': 299, 'imageAsset': 'images/b3.jpg', 'screen': Maybelline()},
+    {'name': 'Ponds', 'price': 1299, 'imageAsset': 'images/b4.jpg', 'screen': Ponds()},
+    {'name': 'SUGAR', 'price': 1499, 'imageAsset': 'images/b5.jpg', 'screen': Sugar()},
+    {'name': 'Lakme', 'price': 499, 'imageAsset': 'images/b6.jpg', 'screen': Lakme()},
   ];
 
   @override
@@ -61,19 +51,28 @@ class Best4 extends StatelessWidget {
       height: 105,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: 5,
+        itemCount: newArrivals.length,
         itemBuilder: (context, index) {
+          final item = newArrivals[index];
+          final String imageAsset = item['imageAsset'] ?? 'assets/images/placeholder.jpg'; // Fallback asset
+
           return Padding(
-            padding: EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8.0),
             child: Column(
               children: [
                 CircleAvatar(
                   radius: 30,
+                  backgroundImage: AssetImage(imageAsset), // Using AssetImage for local assets
                   backgroundColor: Colors.grey[300],
-                  child: Icon(Icons.image, size: 30, color: Colors.white),
+                  onBackgroundImageError: (exception, stackTrace) {
+                    // Handle image loading error if needed
+                  },
                 ),
-                SizedBox(height: 5),
-                Text('Viewed')
+                const SizedBox(height: 5),
+                Text(
+                  item['name'] ?? 'Unknown',
+                  style: const TextStyle(fontSize: 12),
+                ),
               ],
             ),
           );
@@ -94,14 +93,13 @@ class Best4 extends StatelessWidget {
     );
   }
 
-  // 🆕 Use newArrivals list to dynamically build each product card
   Widget _buildProductGrid(BuildContext context) {
-    return Container(
-      height: 1200,
+    return Padding( // Replaced Container with Padding
+      padding: const EdgeInsets.all(8.0),
       child: GridView.builder(
-        // physics: NeverScrollableScrollPhysics(),
-        padding: EdgeInsets.all(8.0),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        shrinkWrap: true, // Allows GridView to size itself based on content
+        physics: const NeverScrollableScrollPhysics(), // Let SingleChildScrollView handle scrolling
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           childAspectRatio: 0.7,
         ),
@@ -112,8 +110,7 @@ class Best4 extends StatelessWidget {
           final int price = item['price'] ?? 0;
           final String brand = item['brand'] ?? 'Trendy Brand';
           final String size = item['size'] ?? 'M';
-          final String imageUrl = item['imageUrl'] ??
-              'https://via.placeholder.com/150';
+          final String imageAsset = item['imageAsset'] ?? 'assets/images/placeholder.jpg'; // Fallback asset
 
           return GestureDetector(
             onTap: () {
@@ -132,8 +129,8 @@ class Best4 extends StatelessWidget {
                   Expanded(
                     child: ClipRRect(
                       borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
-                      child: Image.network(
-                        imageUrl,
+                      child: Image.asset( // Changed to Image.asset
+                        imageAsset,
                         width: double.infinity,
                         fit: BoxFit.cover,
                         errorBuilder: (context, error, stackTrace) {
@@ -152,13 +149,11 @@ class Best4 extends StatelessWidget {
                         SizedBox(height: 6),
                         ElevatedButton(
                           onPressed: () {
-                            // ✅ Use CartProvider to add item
                             Provider.of<CartProvider>(context, listen: false).addItem(
                               name: name,
                               brand: brand,
-                              imageUrl: imageUrl,
+                              imageUrl: imageAsset, // Still named imageUrl in CartProvider
                               price: price,
-
                               size: size,
                             );
 
@@ -182,5 +177,4 @@ class Best4 extends StatelessWidget {
       ),
     );
   }
-
 }

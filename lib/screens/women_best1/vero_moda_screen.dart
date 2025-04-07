@@ -4,15 +4,15 @@ import 'package:provider/provider.dart';
 import 'package:shopping_app/address_screen.dart';
 import '../../favorites_provider.dart';
 import '../cart_provider.dart';
-import '../colour.dart';
+import 'vero_moda_colour.dart';
 
 class VeroModaScreen extends StatefulWidget {
   final String name = 'VERO MODA';
-  final String imageUrl = 'images/b1.jpg';
+  final String imageAsset = 'images/women1.jpg';
   final double price = 499.0;
   final String brand = 'VEDO MODA';
-  final Gradient? selectedGradient; // To receive gradient from GradientGenerator
-  final String? uploadedImagePath; // To receive uploaded image path
+  final Gradient? selectedGradient;
+  final String? uploadedImagePath;
 
   const VeroModaScreen({super.key, this.selectedGradient, this.uploadedImagePath});
 
@@ -21,7 +21,7 @@ class VeroModaScreen extends StatefulWidget {
 }
 
 class _VeroModaScreenState extends State<VeroModaScreen> {
-  String? _selectedSize = 'M'; // Default size
+  String? _selectedSize = 'M';
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class _VeroModaScreenState extends State<VeroModaScreen> {
 
     final favItem = FavoriteItem(
       name: widget.name,
-      imageUrl: widget.imageUrl,
+      imageUrl: widget.imageAsset,
       price: widget.price.toInt(),
     );
 
@@ -60,8 +60,13 @@ class _VeroModaScreenState extends State<VeroModaScreen> {
               height: 500,
               child: PageView(
                 children: [
-                  Image.network(widget.imageUrl, fit: BoxFit.cover),
-                  Image.network("images/b1.jpg", fit: BoxFit.cover),
+                  Image.asset(
+                    widget.imageAsset,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return const Center(child: Icon(Icons.broken_image, size: 50));
+                    },
+                  ),
                 ],
               ),
             ),
@@ -104,10 +109,8 @@ class _VeroModaScreenState extends State<VeroModaScreen> {
                     ],
                   ),
                   const SizedBox(height: 12),
-                  // Replaced Row with two containers
                   Row(
                     children: [
-                      // Container for selected gradient
                       GestureDetector(
                         onTap: () {
                           Navigator.push(
@@ -125,7 +128,6 @@ class _VeroModaScreenState extends State<VeroModaScreen> {
                         ),
                       ),
                       const SizedBox(width: 10),
-                      // Container for uploaded image
                       GestureDetector(
                         onTap: () {
                           Navigator.push(
@@ -154,24 +156,27 @@ class _VeroModaScreenState extends State<VeroModaScreen> {
                   const SizedBox(height: 12),
                   const Text("Size:", style: TextStyle(fontWeight: FontWeight.bold)),
                   const SizedBox(height: 8),
-                  Row(
-                    children: ["S", "M", "L", "XL", "2XL"]
-                        .map((sz) => Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 4),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            _selectedSize = sz;
-                          });
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: _selectedSize == sz ? Colors.blue : null,
-                          foregroundColor: _selectedSize == sz ? Colors.white : null,
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: ["S", "M", "L", "XL", "2XL", ]
+                          .map((sz) => Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            setState(() {
+                              _selectedSize = sz;
+                            });
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: _selectedSize == sz ? Colors.blue : null,
+                            foregroundColor: _selectedSize == sz ? Colors.white : null,
+                          ),
+                          child: Text(sz),
                         ),
-                        child: Text(sz),
-                      ),
-                    ))
-                        .toList(),
+                      ))
+                          .toList(),
+                    ),
                   ),
                   const SizedBox(height: 12),
                   Row(
@@ -196,7 +201,7 @@ class _VeroModaScreenState extends State<VeroModaScreen> {
                               cartProvider.addItem(
                                 name: widget.name,
                                 brand: widget.brand,
-                                imageUrl: widget.imageUrl,
+                                imageUrl: widget.imageAsset,
                                 price: widget.price.toInt(),
                                 size: _selectedSize!,
                               );

@@ -5,7 +5,7 @@ import 'package:shopping_app/address_screen.dart';
 import 'package:shopping_app/confirmation_screen.dart';
 import 'package:shopping_app/payment_screen.dart';
 import 'package:shopping_app/screens/cart_provider.dart';
-import 'package:shopping_app/screens/colour.dart';
+import 'package:shopping_app/screens/women_best1/vero_moda_colour.dart';
 import 'package:shopping_app/screens/login_screen.dart';
 import 'package:shopping_app/screens/navigation_screen.dart';
 import 'package:shopping_app/screens/splash_screen.dart'; // if you use it
